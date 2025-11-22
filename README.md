@@ -1,2 +1,57 @@
-# QualiemController
-QualiemController is a desktop prototype for PCB and product quality inspection, built with Python. Supports incoming PCB and product checks, final board inspection, and basic quality reporting. Designed as a scalable foundation for future mechanical and component-level quality modules.
+# QualiemController 
+
+
+![Platform](https://img.shields.io/badge/Platform-MacOS%20%7C%20Windows-lightgrey?style=for-the-badge&logo=apple)
+
+
+Desktop prototype for **PCB & product quality inspection**, built with **Python**.
+
+**Key Modules:**
+1.  **Incoming Quality Control (IQC):** Inspection of bare PCBs for surface scratches and copper defects.
+2.  **Final Quality Control (FQC):** Verification of assembled boards (component presence, placement accuracy) using reference image comparison.
+3.  **Quality Analytics:** Tracking inspection history and basic defect reporting.
+
+> Note: Some advanced inspection rules and internal quality logic are intentionally simplified or omitted. Since this project is mainly for learning and portfolio purposes, certain modules and code (including parts of the incoming quality control workflow and various quality engineering modules, such as supplier evaluation, defect classification, and deeper IQC/FQC rule-sets) are not fully shared here.
+
+---
+
+## 🧱 Tech Stack
+
+- Python 3.12
+- PyQt6 (desktop UI)
+- OpenCV + NumPy (image processing)
+- SQLite (local database)
+
+---
+
+##  Current Scope (V1)
+
+- Desktop GUI with 3 modes:
+  1. Incoming bare PCB inspection
+  2. Final assembled board inspection
+  3. Inspection history & basic reporting
+
+- Basic image processing pipelines for:
+  - Edge detection, thresholding, simple defect region detection
+  - Reference image differencing for final boards
+
+- SQLite-backed storage for:
+  - Inspection results
+  - Basic metadata (board code, supplier, result, defect count, etc.)
+
+---
+
+## Future Directions
+
+- Mechanical part inspection (surface defects, dimensional checks)
+- Component counting & presence/absence checks
+- Barcode / QR / serial number verification
+- AI-assisted defect classification
+- Supplier quality analytics (defect density, PPM, scorecards)
+- Integration with ERP  systems
+
+> Note: Some of these advanced features are planned as **closed-source** and will not be fully exposed in this public repository.
+
+---
+
+*Developed by Ahmet Elindağ*

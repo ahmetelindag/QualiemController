@@ -33,7 +33,7 @@ class HistoryPage(QWidget):
         self.table.setColumnCount(5)
         self.table.setHorizontalHeaderLabels(["ID", "Timestamp", "Filename", "Defects", "Status"])
         
-        # Tablo Tasarımı (Stil)
+        # Table Design
         self.table.setStyleSheet("""
             QTableWidget {
                 background-color: #252526;
@@ -49,29 +49,29 @@ class HistoryPage(QWidget):
             }
         """)
         
-        # Sütunları genişliğe yay
+        
         self.table.horizontalHeader().setSectionResizeMode(QHeaderView.ResizeMode.Stretch)
         
         layout.addWidget(self.table)
         
-        # İlk açılışta veriyi yükle
+        #load data
         self.load_data()
 
     def load_data(self):
         """Fetches data from DB and populates the table."""
         logs = self.db.get_all_logs()
-        self.table.setRowCount(0) # Tabloyu temizle
+        self.table.setRowCount(0) # clean table
         
         for row_idx, row_data in enumerate(logs):
             self.table.insertRow(row_idx)
-            # row_data formatı: (id, timestamp, filename, count, status)
+            # row_data format: (id, timestamp, filename, count, status)
             
             for col_idx, data in enumerate(row_data):
                 item = QTableWidgetItem(str(data))
                 item.setTextAlignment(Qt.AlignmentFlag.AlignCenter)
                 
-                # Status sütununu renklendir (PASS=Yeşil, FAIL=Kırmızı)
-                if col_idx == 4: # Status sütunu
+                # Status 
+                if col_idx == 4: # Status
                     if data == "PASS":
                         item.setForeground(Qt.GlobalColor.green)
                     else:

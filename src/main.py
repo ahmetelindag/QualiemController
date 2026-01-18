@@ -13,7 +13,7 @@ def main():
     
     processor = ImageProcessor()
     
-    # Path kontrol 
+    # Path control
     ref_path = "data/images/reference/ref.jpg"
     test_path = "data/images/test/test_01.jpg"
 

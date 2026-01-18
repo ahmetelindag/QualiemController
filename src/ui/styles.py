@@ -1,18 +1,18 @@
 # src/ui/styles.py
 
-# Modern Dark Theme Renk Paleti
+# Modern Dark Theme Color Palette
 COLORS = {
-    "background": "#1e1e1e",      # Ana arka plan (Koyu Gri)
-    "sidebar": "#252526",         # Sol menü rengi
-    "button": "#333333",          # Buton normal rengi
-    "button_hover": "#3e3e42",    # Buton üzerine gelince
-    "accent": "#007acc",          # Vurgu rengi (Mavi - VS Code mavisi)
-    "text": "#ffffff",            # Yazı rengi
-    "text_dim": "#cccccc",        # Sönük yazı
-    "border": "#3e3e42"           # Kenarlıklar
+    "background": "#1e1e1e",      # Main background (Dark Grey)
+    "sidebar": "#252526",         # Sidebar color
+    "button": "#333333",          # Button normal color
+    "button_hover": "#3e3e42",    # Button hover state
+    "accent": "#007acc",          # Accent color (Blue - VS Code blue)
+    "text": "#ffffff",            # Text color
+    "text_dim": "#cccccc",        # Dimmed text
+    "border": "#3e3e42"           # Borders
 }
 
-# QSS (Qt Style Sheets) - Arayüzün CSS'i
+# QSS (Qt Style Sheets) - The CSS of the UI
 MAIN_STYLE = f"""
     QMainWindow {{
         background-color: {COLORS['background']};
@@ -22,12 +22,12 @@ MAIN_STYLE = f"""
         font-size: 14px;
         color: {COLORS['text']};
     }}
-    /* Sol Menü Paneli */
+    /* Sidebar Panel */
     QFrame#sidebar {{
         background-color: {COLORS['sidebar']};
         border-right: 1px solid {COLORS['border']};
     }}
-    /* Menü Butonları */
+    /* Menu Buttons */
     QPushButton {{
         background-color: transparent;
         border: none;
@@ -45,7 +45,7 @@ MAIN_STYLE = f"""
         color: {COLORS['accent']};
         border-left: 3px solid {COLORS['accent']};
     }}
-    /* Aksiyon Butonları (Mavi olanlar) */
+    /* Action Buttons (The blue ones) */
     QPushButton#action_btn {{
         background-color: {COLORS['accent']};
         color: white;
@@ -55,7 +55,7 @@ MAIN_STYLE = f"""
     QPushButton#action_btn:hover {{
         background-color: #0098ff;
     }}
-    /* Kartlar / Paneller */
+    /* Cards / Panels */
     QFrame#panel {{
         background-color: {COLORS['sidebar']};
         border-radius: 8px;

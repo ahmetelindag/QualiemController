@@ -2,9 +2,9 @@ from PyQt6.QtWidgets import (QWidget, QVBoxLayout, QHBoxLayout, QLabel,
                              QFrame, QSizePolicy, QGridLayout)
 from PyQt6.QtCore import Qt
 from src.core.database import DatabaseManager
-import numpy as np  # İstatistik hesabı için (Yoksa: pip install numpy)
+import numpy as np  # For statistical calculations (If missing: pip install numpy)
 
-# Grafik Kütüphanesi
+# Graphing Library
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import matplotlib.pyplot as plt
@@ -21,10 +21,10 @@ class QualityPage(QWidget):
         layout.setContentsMargins(20, 20, 20, 20)
         layout.setSpacing(15)
 
-        # --- 1. BAŞLIK VE ÖZET KARTLARI ---
+        # --- 1. HEADER AND SUMMARY CARDS ---
         top_section = QHBoxLayout()
         
-        # Başlık
+        # Title
         title_box = QVBoxLayout()
         header = QLabel("📈 Quality Control Center")
         header.setStyleSheet("font-size: 22px; font-weight: bold; color: white;")
@@ -36,7 +36,7 @@ class QualityPage(QWidget):
         top_section.addLayout(title_box)
         top_section.addStretch()
         
-        # İstatistik Kutucukları (Mean, Max vs.)
+        # Statistic Boxes (Mean, Max, etc.)
         self.lbl_stats = QLabel("Avg: 0 | Max: 0 | StdDev: 0.0")
         self.lbl_stats.setStyleSheet("""
             background-color: #333; color: #4cd964; 
@@ -47,7 +47,7 @@ class QualityPage(QWidget):
         
         layout.addLayout(top_section)
 
-        # --- 2. GRAFİK ALANI (Tek Canvas içinde 2 Grafik) ---
+        # --- 2. CHART AREA (2 Charts in Single Canvas) ---
         self.chart_frame = QFrame()
         self.chart_frame.setStyleSheet("background-color: #252526; border-radius: 10px;")
         self.chart_frame.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
@@ -55,18 +55,18 @@ class QualityPage(QWidget):
         self.chart_layout = QVBoxLayout(self.chart_frame)
         layout.addWidget(self.chart_frame)
 
-        # İlk açılış
+        # Initial load
         self.refresh_chart()
 
     def refresh_chart(self):
-        """Verileri çeker, istatistikleri hesaplar ve 2 grafik çizer."""
+        """Fetches data, calculates statistics, and draws 2 charts."""
         logs = self.db.get_all_logs()
-        logs.reverse() # Eskiden yeniye sırala
+        logs.reverse() # Sort from old to new
 
         ids = [row[0] for row in logs]
         defects = [row[3] for row in logs]
 
-        # --- İSTATİSTİK HESAPLAMA ---
+        # --- STATISTICS CALCULATION ---
         if len(defects) > 0:
             avg_defect = np.mean(defects)
             max_defect = np.max(defects)
@@ -77,14 +77,14 @@ class QualityPage(QWidget):
         
         self.lbl_stats.setText(stats_text)
 
-        # --- MATPLOTLIB GRAFİKLERİ ---
-        # 2 Satır, 1 Sütunluk bir figür oluşturuyoruz
+        # --- MATPLOTLIB CHARTS ---
+        # Creating a figure with 2 Rows, 1 Column
         fig = Figure(figsize=(8, 8), dpi=100)
         fig.patch.set_facecolor('#252526')
-        fig.subplots_adjust(hspace=0.4) # İki grafik arası boşluk
+        fig.subplots_adjust(hspace=0.4) # Space between two charts
 
-        # GRAFİK 1: SPC Trend (Çizgi)
-        ax1 = fig.add_subplot(211) # 2 satır, 1 sütun, 1. grafik
+        # CHART 1: SPC Trend (Line)
+        ax1 = fig.add_subplot(211) # 2 rows, 1 col, 1st chart
         ax1.set_facecolor('#1e1e1e')
         
         if len(ids) > 0:
@@ -98,24 +98,24 @@ class QualityPage(QWidget):
         else:
             ax1.text(0.5, 0.5, "Waiting for data...", ha='center', color='#666')
 
-        # GRAFİK 2: Histogram (Çubuk)
-        ax2 = fig.add_subplot(212) # 2 satır, 1 sütun, 2. grafik
+        # CHART 2: Histogram (Bar)
+        ax2 = fig.add_subplot(212) # 2 rows, 1 col, 2nd chart
         ax2.set_facecolor('#1e1e1e')
 
         if len(defects) > 0:
-            # Histogram verisi: Hataların dağılımı
+            # Histogram data: Distribution of defects
             counts, bins, patches = ax2.hist(defects, bins=range(min(defects), max(defects) + 2), 
                                              color='#28a745', alpha=0.7, rwidth=0.8, align='left')
             ax2.set_title("Defect Frequency Distribution", color='white', fontsize=10)
             ax2.set_xlabel("Defect Count (Severity)", color='#ccc')
             ax2.set_ylabel("Frequency", color='#ccc')
-            ax2.set_xticks(bins[:-1]) # X eksenine tam sayıları yaz
+            ax2.set_xticks(bins[:-1]) # Write integers to X axis
             ax2.grid(axis='y', color='#333', linestyle=':')
             ax2.tick_params(colors='#ccc')
         else:
             ax2.text(0.5, 0.5, "Waiting for data...", ha='center', color='#666')
 
-        # Grafiği Ekrana Bas
+        # Render Chart to Screen
         canvas = FigureCanvas(fig)
         
         if self.chart_layout.count() > 0:

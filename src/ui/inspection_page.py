@@ -8,21 +8,21 @@ from PyQt6.QtGui import QPixmap, QImage, QCursor
 from src.core.image_processor import ImageProcessor
 from src.core.database import DatabaseManager
 
-# --- 1. YENİ SINIF: TAM EKRAN GÖRÜNTÜLEYİCİ ---
+# --- 1.  FULL SCREEN VIEWER ---
 class ImageViewer(QDialog):
     def __init__(self, cv_image, title="Image Viewer"):
         super().__init__()
         self.setWindowTitle(title)
-        self.resize(800, 600) # Varsayılan açılış boyutu
+        self.resize(800, 600) # Default opening size
         
         layout = QVBoxLayout(self)
         self.label = QLabel()
         self.label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         
-        # Resmi hazırla
+        # Prepare the image
         self.set_image(cv_image)
         
-        # Scroll Area (Resim çok büyükse kaydırmak için)
+        # Scroll Area (To scroll if the image is too large)
         scroll = QScrollArea()
         scroll.setWidget(self.label)
         scroll.setWidgetResizable(True)
@@ -31,7 +31,7 @@ class ImageViewer(QDialog):
     def set_image(self, cv_img):
         if cv_img is None: return
         
-        # Renk dönüşümü
+        # Color conversion
         if len(cv_img.shape) == 2:
             rgb_img = cv2.cvtColor(cv_img, cv2.COLOR_GRAY2RGB)
         else:
@@ -42,11 +42,11 @@ class ImageViewer(QDialog):
         q_img = QImage(rgb_img.data, w, h, bytes_per_line, QImage.Format.Format_RGB888)
         self.label.setPixmap(QPixmap.fromImage(q_img))
 
-# --- 2. YENİ SINIF: TIKLANABİLİR ETİKET ---
+#  2.CLICKABLE LABEL 
 class ClickableImageLabel(QLabel):
     def __init__(self, title):
         super().__init__(title)
-        self.original_image = None # Orijinal yüksek çözünürlüklü resmi sakla
+        self.original_image = None # Store the original high-resolution image
         self.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.setStyleSheet("""
             QLabel {
@@ -55,20 +55,20 @@ class ClickableImageLabel(QLabel):
                 color: #666;
             }
             QLabel:hover {
-                border: 2px solid #00ff00; /* Üzerine gelince yeşil çerçeve */
+                border: 2px solid #00ff00; /* Green border on hover */
                 cursor: pointer;
             }
         """)
         self.setMinimumSize(320, 240)
-        # Resim büyüyebilsin diye politika ayarı
+        
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
         
     def set_cv_image(self, cv_img):
-        """Resmi hem ekranda göster hem hafızada tut"""
+        """Display image on screen and keep it in memory"""
         self.original_image = cv_img
         if cv_img is None: return
 
-        # Ekranda göstermek için küçültülmüş/uyarlanmış halini hazırla
+        # Prepare scaled/adapted version for display
         if len(cv_img.shape) == 2:
             rgb_img = cv2.cvtColor(cv_img, cv2.COLOR_GRAY2RGB)
         else:
@@ -79,17 +79,17 @@ class ClickableImageLabel(QLabel):
         q_img = QImage(rgb_img.data, w, h, bytes_per_line, QImage.Format.Format_RGB888)
         pixmap = QPixmap.fromImage(q_img)
         
-        # Etiketin boyutuna sığdır (KeepAspectRatio)
+        # Scale to fit label size (KeepAspectRatio)
         self.setPixmap(pixmap.scaled(self.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation))
 
     def mouseDoubleClickEvent(self, event):
-        """Çift tıklanınca bu çalışır"""
+        """This runs on double click"""
         if self.original_image is not None:
-            # Yeni pencere aç
+            # Open new window
             viewer = ImageViewer(self.original_image, self.text())
             viewer.exec()
 
-# --- 3. GÜNCELLENMİŞ SAYFA ---
+# --- 3. UPDATED PAGE ---
 class InspectionPage(QWidget):
     def __init__(self):
         super().__init__()
@@ -104,7 +104,7 @@ class InspectionPage(QWidget):
     def init_ui(self):
         layout = QVBoxLayout(self)
         
-        # --- ÜST PANEL ---
+        # --- TOP PANEL ---
         top_controls = QHBoxLayout()
         
         self.btn_load_ref = QPushButton("📂 Load Reference")
@@ -125,10 +125,10 @@ class InspectionPage(QWidget):
         
         layout.addLayout(top_controls)
         
-        # --- ORTA PANEL (RESİMLER) ---
+        # --- MIDDLE PANEL (IMAGES) ---
         grid = QGridLayout()
         
-        # Artık normal QLabel yerine ClickableImageLabel kullanıyoruz
+        # Using ClickableImageLabel instead of normal QLabel
         self.lbl_ref = ClickableImageLabel("Reference Image")
         grid.addWidget(self.lbl_ref, 0, 0)
         
@@ -139,13 +139,13 @@ class InspectionPage(QWidget):
         grid.addWidget(self.lbl_aligned, 1, 0)
         
         self.lbl_result = ClickableImageLabel("FINAL RESULT")
-        # Final Result daha dikkat çekici olsun
+        # Make Final Result more noticeable
         self.lbl_result.setStyleSheet("border: 2px solid #28a745; background-color: #111; color: #28a745; font-weight: bold;")
         grid.addWidget(self.lbl_result, 1, 1)
         
         layout.addLayout(grid)
         
-        # --- ALT PANEL ---
+        # --- BOTTOM PANEL ---
         self.status_label = QLabel("Status: Waiting for images... (Double click images to zoom)")
         self.status_label.setStyleSheet("color: #aaa; font-style: italic;")
         layout.addWidget(self.status_label)
@@ -155,7 +155,7 @@ class InspectionPage(QWidget):
         if fname:
             self.ref_path = fname
             img = cv2.imread(fname)
-            self.lbl_ref.set_cv_image(img) # Yeni fonksiyonu kullanıyoruz
+            self.lbl_ref.set_cv_image(img) # Using new function
             self.check_ready()
 
     def load_test(self):
@@ -163,7 +163,7 @@ class InspectionPage(QWidget):
         if fname:
             self.test_path = fname
             img = cv2.imread(fname)
-            self.lbl_test.set_cv_image(img) # Yeni fonksiyonu kullanıyoruz
+            self.lbl_test.set_cv_image(img) # Using new function
             self.check_ready()
             
     def check_ready(self):
@@ -176,19 +176,19 @@ class InspectionPage(QWidget):
         self.status_label.repaint()
         
         try:
-            # 1. Yükle
+            # 1. Load
             img_ref = self.processor.load_image(self.ref_path)
             img_test = self.processor.load_image(self.test_path)
             
-            # 2. Hizala
+            # 2. Align
             aligned_img = self.processor.align_images(img_test, img_ref)
-            self.lbl_aligned.set_cv_image(aligned_img) # Göster
+            self.lbl_aligned.set_cv_image(aligned_img) # Show
             
-            # 3. Hata Bul
+            # 3. Detect Defects
             result_img, thresh, count = self.processor.detect_defects(img_ref, aligned_img)
-            self.lbl_result.set_cv_image(result_img) # Göster
+            self.lbl_result.set_cv_image(result_img) # Show
             
-            # 4. Durum
+            # 4. Status
             if count == 0:
                 self.status_label.setText("✅ PASS: Perfect match.")
                 self.status_label.setStyleSheet("color: #4cd964; font-weight: bold;")
@@ -196,7 +196,7 @@ class InspectionPage(QWidget):
                 self.status_label.setText(f"❌ FAIL: {count} defects detected! (Double click image to see details)")
                 self.status_label.setStyleSheet("color: #ff3b30; font-weight: bold;")
 
-            # 5. DB Kayıt
+            # 5. DB Log
             if self.test_path:
                 file_name = os.path.basename(self.test_path)
                 self.db.add_log(file_name, count)

@@ -12,7 +12,7 @@ class ImageProcessor:
         return img
 
     def align_images(self, img_test, img_ref, debug=False):
-        """Hizalama Fonksiyonu (Değişmedi)"""
+        #Alignment Function
         gray_test = cv2.cvtColor(img_test, cv2.COLOR_BGR2GRAY)
         gray_ref = cv2.cvtColor(img_ref, cv2.COLOR_BGR2GRAY)
 
@@ -44,17 +44,17 @@ class ImageProcessor:
 
     def detect_defects(self, img_ref, img_aligned, min_area=50):
         """
-        GÜNCEL MANTIK: Siyah Yol / Beyaz Zemin + Kenar Artefaktı Temizliği.
+        Black Path / White Background + Edge Cleaning
         """
-        # Griye Çevir
+        # turn gray
         gray_ref = cv2.cvtColor(img_ref, cv2.COLOR_BGR2GRAY)
         gray_test = cv2.cvtColor(img_aligned, cv2.COLOR_BGR2GRAY)
         
-        # Resim boyutlarını al (Kenar kontrolü için)
+        # Get image dimensions (for border control)
         img_h, img_w = gray_ref.shape[:2]
-        border_margin = 10 # Kenardan kaç piksel içeriyi güvenli sayacağız?
+        border_margin = 10 #How many pixels inward from the edge will we consider safe
 
-        # Farkı Bul
+        # Find the Difference
         diff = cv2.absdiff(gray_ref, gray_test)
         _, thresh = cv2.threshold(diff, 50, 255, cv2.THRESH_BINARY)
 
@@ -67,7 +67,7 @@ class ImageProcessor:
         result_img = img_aligned.copy()
         defect_count = 0
         
-        # Tasarım Rengi (Yeşil)
+        # Color (Green)
         box_color = (0, 255, 0) 
         
         for cnt in contours:
@@ -77,23 +77,23 @@ class ImageProcessor:
                 x, y, w, h = cv2.boundingRect(cnt)
 
                 # ---  (BORDER CHECK) ---
-                # Eğer kutu resmin kenarlarına çok yakınsa, bu bir artefaktır. Atla.
+                # If the box is too close to the edges of the image, skip
                 if (x < border_margin) or \
                    (y < border_margin) or \
                    (x + w > img_w - border_margin) or \
                    (y + h > img_h - border_margin):
-                    continue # Bu hatayı yoksay ve bir sonrakine geç
+                    continue 
 
-                # Gerçek bir hata bulduk, sayacı artır
+                # def count
                 defect_count += 1
                 
-                # --- RENK ANALİZİ ---
+                #COLOR ANALYSIS
                 mask_roi = np.zeros_like(gray_test)
                 cv2.drawContours(mask_roi, [cnt], -1, 255, -1)
                 mean_val = cv2.mean(gray_test, mask=mask_roi)[0]
                 
-                # --- SINIFLANDIRMA MANTIĞI ---
-                # DURUM 1: BEYAZ FAZLALIK (Zemin Rengi) -> EKSİK BAKIR
+                # CLASSİFİCATİON
+                # CASE 1: WHITE EXCESS (Ground Color) MISSING COPPER
                 if mean_val > 150: 
                     if area < 200:
                         label = "pin-hole"
@@ -102,14 +102,14 @@ class ImageProcessor:
                     else:
                         label = "open"
                         
-                # DURUM 2: SİYAH FAZLALIK (Yol Rengi) -> FAZLA BAKIR
+                # CASE 2: EXCESS BLACK (Road Color) EXCESS COPPER
                 else: 
                     if area > 350:
                         label = "short"
                     else:
                         label = "copper"
                 
-                # --- ÇİZİM ---
+                # DRAWİNG
                 cv2.rectangle(result_img, (x, y), (x + w, y + h), box_color, 2)
                 
                 (text_w, text_h), _ = cv2.getTextSize(label, cv2.FONT_HERSHEY_SIMPLEX, 0.5, 1)

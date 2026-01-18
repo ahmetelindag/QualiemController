@@ -6,10 +6,19 @@
 
 Desktop prototype for **PCB & product quality inspection**, built with **Python**.
 
+ Interface Preview
+![WhatsApp Image 2025-12-25 at 11 33 35](https://github.com/user-attachments/assets/766a28fc-3d85-4120-a5a7-41abf7a5588a)
+![WhatsApp Image 2025-12-25 at 11 46 25](https://github.com/user-attachments/assets/0dbe93df-6adb-4d34-b121-a41e218fa7f8)
+
+ 
+
 **Key Modules:**
 1.  **Incoming Quality Control (IQC):** Inspection of bare PCBs for surface scratches and copper defects.
 2.  **Final Quality Control (FQC):** Verification of assembled boards (component presence, placement accuracy) using reference image comparison.
 3.  **Quality Analytics:** Tracking inspection history and basic defect reporting.
+4.  **Interactive Inspection:**
+    * Zoomable/Clickable image viewers for detailed defect analysis.
+    * Visual "Pass/Fail" feedback loop.
 
 > Note: Some advanced inspection rules and internal quality logic are intentionally simplified or omitted. Since this project is mainly for learning and portfolio purposes, certain modules and code (including parts of the incoming quality control workflow and various quality engineering modules, such as supplier evaluation, defect classification, and deeper IQC/FQC rule-sets) are not fully shared here.
 
@@ -24,10 +33,10 @@ Desktop prototype for **PCB & product quality inspection**, built with **Python*
 
 ---
 
-##  Current Scope (V1)
+##  Current Scope 
 
 - Desktop GUI with 3 modes:
-  1. Incoming bare PCB inspection
+  1.  bare PCB inspection
   2. Final assembled board inspection
   3. Inspection history & basic reporting
 

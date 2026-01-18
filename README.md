@@ -6,9 +6,11 @@
 
 Desktop prototype for **PCB & product quality inspection**, built with **Python**.
 
- Interface Preview
+ **Interface Preview**
 ![WhatsApp Image 2025-12-25 at 11 33 35](https://github.com/user-attachments/assets/766a28fc-3d85-4120-a5a7-41abf7a5588a)
 ![WhatsApp Image 2025-12-25 at 11 46 25](https://github.com/user-attachments/assets/0dbe93df-6adb-4d34-b121-a41e218fa7f8)
+<img width="1023" height="686" alt="image" src="https://github.com/user-attachments/assets/8a128c8d-d29a-44da-a7d9-fd824b08090b" />
+
 
  
 
@@ -20,8 +22,7 @@ Desktop prototype for **PCB & product quality inspection**, built with **Python*
     * Zoomable/Clickable image viewers for detailed defect analysis.
     * Visual "Pass/Fail" feedback loop.
 
-> Note: Some advanced inspection rules and internal quality logic are intentionally simplified or omitted. Since this project is mainly for learning and portfolio purposes, certain modules and code (including parts of the incoming quality control workflow and various quality engineering modules, such as supplier evaluation, defect classification, and deeper IQC/FQC rule-sets) are not fully shared here.
-
+> Note:   this project is mainly for learning and portfolio purposes
 ---
 
 ## 🧱 Tech Stack

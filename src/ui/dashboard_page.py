@@ -83,7 +83,7 @@ class DashboardPage(QWidget):
         return card
 
     def create_pie_chart(self, pass_count, fail_count):
-        """PASS (Yeşil) ve FAIL (Kırmızı) Pasta Grafiği oluşturur."""
+       
         
         # 1.Figure Settings
         fig = Figure(figsize=(5, 4), dpi=100)

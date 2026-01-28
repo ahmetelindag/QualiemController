@@ -89,7 +89,6 @@ class ClickableImageLabel(QLabel):
             viewer = ImageViewer(self.original_image, self.text())
             viewer.exec()
 
-# --- 3. UPDATED PAGE ---
 class InspectionPage(QWidget):
     def __init__(self):
         super().__init__()
@@ -128,7 +127,7 @@ class InspectionPage(QWidget):
         # --- MIDDLE PANEL (IMAGES) ---
         grid = QGridLayout()
         
-        # Using ClickableImageLabel instead of normal QLabel
+        
         self.lbl_ref = ClickableImageLabel("Reference Image")
         grid.addWidget(self.lbl_ref, 0, 0)
         

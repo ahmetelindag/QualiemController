@@ -65,3 +65,4 @@ Desktop prototype for **PCB & product quality inspection**, built with **Python*
 ---
 
 *Developed by Ahmet Elindağ*
+ahmetelindag@gmail.com
